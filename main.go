@@ -1,13 +1,13 @@
 package main
 
 import (
+	"budget-tracker/export"
 	"budget-tracker/process"
 	"budget-tracker/standardize"
-	"budget-tracker/export"
 	"fmt"
+	"log"
 	"os"
 	"time"
-	"log"
 )
 
 func main() {
@@ -51,6 +51,12 @@ func main() {
 	err = export.ExportToCSV(month, expenseRecords, classifyManually)
 	if err != nil {
 		log.Fatalf("failed to export to CSV: %s", err)
+	}
+
+	// export into Excel
+	err = export.ExportToExcel(month, expenseRecords, classifyManually)
+	if err != nil {
+		log.Fatalf("failed to export to Excel: %s", err)
 	}
 
 }
