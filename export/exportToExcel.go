@@ -2,6 +2,8 @@ package export
 
 import (
 	"budget-tracker/models"
+	"budget-tracker/utils"
+	"budget-tracker/process"
 
 	"fmt"
 	"strconv"
@@ -119,7 +121,7 @@ func ExportToExcel(month string, expenseRecords, classifyManually []models.Expen
 	}
 
 	expenseFormat, err := f.NewConditionalStyle(&excelize.Style{
-		Font: &excelize.Font{Color:"#FF0000"},
+		Font: &excelize.Font{Color: "#FF0000"},
 	})
 	if err != nil {
 		return err
@@ -129,10 +131,22 @@ func ExportToExcel(month string, expenseRecords, classifyManually []models.Expen
 		{
 			Type:     "cell",
 			Criteria: "<",
-			Value: "0",
+			Value:    "0",
 			Format:   expenseFormat,
 		},
 	})
+	if err != nil {
+		return err
+	}
+
+	// Create table by Category
+	err = process.CreateCategoryTable(f, classifyManuallyRow)
+	if err != nil {
+		return err
+	}
+
+	// Add chart
+	err = utils.AddPieChart(f)
 	if err != nil {
 		return err
 	}
