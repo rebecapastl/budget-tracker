@@ -3,8 +3,12 @@ package process
 import (
 	"budget-tracker/models"
 	"budget-tracker/utils"
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func ClassifyInputRecord(creditCardExpenses, accountExpenses []models.BankRecord) ([]models.ExpenseRecord, []models.ExpenseRecord) {
@@ -38,11 +42,11 @@ func ClassifyInputRecord(creditCardExpenses, accountExpenses []models.BankRecord
 		category := findCategory(purpose)
 
 		expenseRecord := models.ExpenseRecord{
-			Date: record.Date,
-			Value: record.Value,
+			Date:     record.Date,
+			Value:    record.Value,
 			Category: category,
-			Purpose: purpose,
-			Company: utils.SanitizeCompanyName(record.Company),
+			Purpose:  purpose,
+			Company:  utils.SanitizeCompanyName(record.Company),
 		}
 
 		if expenseRecord.Category == "" || expenseRecord.Purpose == "" {
@@ -54,6 +58,119 @@ func ClassifyInputRecord(creditCardExpenses, accountExpenses []models.BankRecord
 
 	return expenseRecords, classifyManually
 
+}
+
+func InputMissingInfo(classifyManually []models.ExpenseRecord) error {
+	reader := bufio.NewScanner(os.Stdin)
+
+	for i, record := range classifyManually {
+		fmt.Println(record)
+
+		for !slices.Contains(categoryList, record.Category) {
+			fmt.Println("What is the Category of this record: ")
+			reader.Scan()
+			record.Category = reader.Text()
+		}
+		for record.Company == "" {
+			fmt.Println("What is the Company of this record: ")
+			reader.Scan()
+			record.Company = reader.Text()
+		}
+		for !slices.Contains(purposeList, record.Purpose) {
+			fmt.Println("What is the Purpose of this record: ")
+			reader.Scan()
+			record.Purpose = reader.Text()
+		}
+
+		classifyManually[i] = record
+	}
+
+	return nil
+}
+
+var categoryList = []string{
+	"Home",
+	"Pets",
+	"Entretainment",
+	"Study",
+	"Extra",
+	"Taxes",
+	"Investment",
+	"Personal",
+	"Health",
+	"Commuting",
+	"Income",
+	"Accounts Maintenance",
+}
+
+var purposeList = []string{
+	"Groceries/Supplies",
+	"Meal",
+	"Rent",
+	"Heating",
+	"Mobile",
+	"Power",
+	"Internet",
+	"Maintenance/Repairs",
+
+	"Food",
+	"Pet medicine",
+	"Pet shop",
+	"Grooming",
+	"Veterinary",
+
+	"Movies",
+	"Computer",
+	"Drawing",
+	"Sports/events/shows",
+	"Games",
+	"Books",
+	"Comics",
+	"Travel",
+	"Stream",
+
+	"Enrollment",
+	"Course",
+	"Study books",
+	"Study supplies",
+
+	"Other",
+	"Rounding",
+	"Donation",
+	"Gifts",
+	"Withdrawal",
+
+	"Tax Return",
+	"Fee",
+
+	"WealthSimple",
+	"Savings",
+
+	"Clothing",
+	"Hair",
+	"Beauty",
+	"Hygene",
+	"Laundry",
+
+	"MSP",
+	"Medicine",
+	"First aid/supplies",
+
+	"Transit",
+	"Gas",
+	"Parking",
+	"Car maintenance",
+	"Ticket",
+	"Insurance",
+	"Car rent",
+	"Ride",
+
+	"Salary",
+	"Investment",
+	"EI Benefit",
+	"Tax Refund",
+
+	"Transfer to Credit Card",
 }
 
 // purpose to category string

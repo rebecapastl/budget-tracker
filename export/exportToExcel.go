@@ -74,14 +74,18 @@ func ExportToExcel(month string, expenseRecords, classifyManually []models.Expen
 		f.SetCellValue("Despesas", "E"+strconv.Itoa(classifyManuallyRow), record.Value)
 
 		// Find out how to use SetConditionalStyle for blank cells
-		err = f.SetCellStyle("Despesas", "C"+strconv.Itoa(classifyManuallyRow), "C"+strconv.Itoa(classifyManuallyRow), blankFormat)
-		if err != nil {
-			return err
+		if record.Category == "" {
+			err = f.SetCellStyle("Despesas", "C"+strconv.Itoa(classifyManuallyRow), "C"+strconv.Itoa(classifyManuallyRow), blankFormat)
+			if err != nil {
+				return err
+			}
 		}
 
-		err = f.SetCellStyle("Despesas", "D"+strconv.Itoa(classifyManuallyRow), "D"+strconv.Itoa(classifyManuallyRow), blankFormat)
-		if err != nil {
-			return err
+		if record.Purpose == "" {
+			err = f.SetCellStyle("Despesas", "D"+strconv.Itoa(classifyManuallyRow), "D"+strconv.Itoa(classifyManuallyRow), blankFormat)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

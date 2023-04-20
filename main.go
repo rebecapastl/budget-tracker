@@ -47,6 +47,11 @@ func main() {
 	fmt.Println("classifyManually")
 	fmt.Println(classifyManually)
 
+	process.InputMissingInfo(classifyManually)
+
+	fmt.Println("classifyManually")
+	fmt.Println(classifyManually)
+
 	// export into CSV
 	err = export.ExportToCSV(month, expenseRecords, classifyManually)
 	if err != nil {
