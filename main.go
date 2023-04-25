@@ -1,6 +1,7 @@
 package main
 
 import (
+	"budget-tracker/config"
 	"budget-tracker/export"
 	"budget-tracker/process"
 	"budget-tracker/standardize"
@@ -11,6 +12,14 @@ import (
 )
 
 func main() {
+
+	configFile := "config.yml"
+
+	config, err := config.ReadConfig(configFile)
+	if err != nil{
+		log.Fatal(err)
+	}
+
 	fmt.Println("Budget tracker")
 
 	argsWithoutProg := os.Args[1:]
@@ -26,7 +35,7 @@ func main() {
 	fmt.Println(month)
 
 	// convert card records
-	creditCardExpenses, err := standardize.ExtractCreditCardRecords(month)
+	creditCardExpenses, err := standardize.ExtractCreditCardRecords(config.File.Path, month)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -34,7 +43,7 @@ func main() {
 	// fmt.Println(creditCardExpenses)
 
 	// convert account records
-	accountExpenses, err := standardize.ExtractAccountRecords(month)
+	accountExpenses, err := standardize.ExtractAccountRecords(config.File.Path, month)
 	if err != nil {
 		fmt.Println(err)
 	}

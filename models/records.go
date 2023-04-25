@@ -1,5 +1,11 @@
 package models
 
+type Config struct {
+	File struct{
+		Path	string	`yaml:"path"`
+	} `yaml: "file"`
+}
+
 type BankRecord struct {
 	Date    string
 	Value   float64
