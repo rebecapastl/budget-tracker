@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/xuri/excelize"
+	"github.com/xuri/excelize/v2"
 )
 
 func ExportToExcel(month string, expenseRecords, classifyManually []models.ExpenseRecord) error {

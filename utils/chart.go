@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"github.com/xuri/excelize"
+	"github.com/xuri/excelize/v2"
 )
 
 func AddPieChart(f *excelize.File) error {
 	err := f.AddChart("Despesas", "F1", &excelize.Chart{
-		Type: "pie",
+		Type: excelize.Pie,
 		Series: []excelize.ChartSeries{
 			{
 				Name:       "Amount",

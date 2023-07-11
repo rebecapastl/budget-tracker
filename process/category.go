@@ -3,7 +3,7 @@ package process
 import (
 	"strconv"
 
-	"github.com/xuri/excelize"
+	"github.com/xuri/excelize/v2"
 )
 
 // How to filter only negative values (to sum expenses)
